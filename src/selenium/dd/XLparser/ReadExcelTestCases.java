@@ -26,7 +26,7 @@ public class ReadExcelTestCases {
 	
 	//Global Variables
 	ArrayList TestCases = new ArrayList();
-	ArrayList RequiredScenarios = new ArrayList();
+	ArrayList RequiredTestCases = new ArrayList();
 	
 	//Logging details in log.property file
 	static Logger log = Logger.getLogger(ReadExcelTestCases.class.getName());
@@ -54,7 +54,7 @@ public class ReadExcelTestCases {
 			//System.out.println("No. of rows in Input XL file for Test Scenarios Sheet = " + rows);
 			int cols = sh.getRow(0).getLastCellNum();
 			//System.out.println("No. of columns in input file for Test Scenarios Sheet = " + cols);
-			// Debug: System.out.println("Release Number = " + releasenum);
+			//Debug: System.out.println("Release Number = " + releasenum);
 			
 			//Iterate Rows and Read complete input XL file
 			for(int i=0; i<rows; i++) {
@@ -75,9 +75,6 @@ public class ReadExcelTestCases {
 							String data = current_row.getCell(j).getStringCellValue();
 							//Debug: System.out.println("Cell Value" + " " + data + "\n");
 							((ArrayList)TestCases.get(i)).add(data);
-				//			if( data.equals(release_num))  {
-				//				Rcol=j;
-				//			}
 						}
 						if (type == 0 ) {
 							double value = current_row.getCell(j).getNumericCellValue();
@@ -89,47 +86,55 @@ public class ReadExcelTestCases {
 				}
 			}
 			
-			
-	
-			//Filter Release column and Read only required input XL file
-			int ReleaseCol = Rcol;
-			log.info("Reading XL for required release column and Test Scenarios...");
-			int j=-1; //Set loop counter for new ArrayList getting copied in...
-			
-			//Read only required cells from ArrayList
-			for(int r=0; r<TestCases.size(); r++) {
-			RequiredScenarios.add(new ArrayList());
-			j++;
-			/* Console Output formatting	
-			String newLine = System.getProperty("line.separator");
-			System.out.println(newLine); */
-			
+			//Filter Required Scenarios from Test Case List
+			String data=null;
+			for(int r=0; r<TestCases.size(); r++){
+				//Console Formatting:
+				//String newLine = System.getProperty("line.separator");
+				//System.out.println(newLine);
 				for(int c=0; c <((ArrayList)TestCases.get(r)).size(); c++) {
-					if( c == 0 || c == ReleaseCol) {
-					String data = (String)((ArrayList)TestCases.get(r)).get(c);
-					((ArrayList)RequiredScenarios.get(j)).add(data);
-					} 
-				}	
-			} 
+					
+					if (c == 0 ){
+						data=((String)((ArrayList)TestCases.get(r)).get(c));
+						for (int i=0; i<scenarios.size();i++) {
+							if(data.equals(scenarios.get(i))) {
+								//System.out.println(((ArrayList)TestCases.get(r)).get(c) +"  "); 
+								System.out.println(scenarios.get(i)); 
+								String tcdata = (String) ((ArrayList)TestCases.get(r)).get(c+2);
+								if(tcdata.equals("Y")){
+									System.out.println("Copy " + ((ArrayList)TestCases.get(r)).get(c+1));
+									RequiredTestCases.add(TestCases.get(r));
+									RequiredTestCases.add(new ArrayList());	
+											//(String) ((ArrayList)TestCases.get(r)));
+								}
+							} else {	
+								
+							}
+						} // End Inner IF
+					} //End Outer IF
+					
+				} // End Inner For 
+			} //End Outer For
 			
-			//Debug: System.out.println("This is required" + RequiredScenarios);
+			//Debug: System.out.println("This is required" + RequiredTestCases);
 			
 			FSRead.close();
 			}catch (IOException e) {
 				log.debug("Error in ReadExcel.java while reading XL file", e);
 			}
 			
-			/* Debug System.out.println(" In Loop");
-				for(int r=0; r<TestCases.size(); r++){
+			 //Debug:
+		 System.out.println(" In Loop");
+				for(int r=0; r<RequiredTestCases.size(); r++){
 						String newLine = System.getProperty("line.separator");
 						System.out.println(newLine);
-						for(int c=0; c <((ArrayList)TestCases.get(r)).size(); c++) {
-							System.out.print( (String)((ArrayList)TestCases.get(r)).get(c) +"  ");  
+						for(int c=0; c <((ArrayList)RequiredTestCases.get(r)).size(); c++) {
+							System.out.print(((ArrayList)RequiredTestCases.get(r)).get(c) +"  ");  
 						}
 				} 
-			*/
-				log.info("Reading XL Complete for Test Scenarios and required column...");
-				return RequiredScenarios;
+			
+				log.info("Reading XL Complete for Test Case...");			
+				return TestCases;
 	}
 	
 	

@@ -58,10 +58,10 @@ public class RunSuite {
 		
 		//Read Excel File for filtered Test Scenarios
 		ArrayList FilterTestScenarios = new ArrayList();
-		log.info("Call Read Test Scenarios from Array Object for Merging...");
+		log.info("Call Read Test Scenarios from Array Object...");
 		FilterTestCases FilterTC = new FilterTestCases();
 		FilterTestScenarios = FilterTC.FilterCases(ReadTestScenarios);
-		log.info("Call Read Test Scenarios for Merging complete...");
+		log.info("Call Read Test Scenarios filtered...");
 		
 		//Read Excel File for test cases and filter required scenarios columns
 		ArrayList ReadTestCases = new ArrayList();
