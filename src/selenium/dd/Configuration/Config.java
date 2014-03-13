@@ -98,7 +98,7 @@ public class Config implements Configuration_Interface {
 		 * This method return file path to write out .xls file
 		 * @return String OutputfilePath;
 		 */
-		String OutputfilePath = conf_file.getProperty("OutputFiePath");
+		String OutputfilePath = conf_file.getProperty("OutputFilePath");
 		log.info("Reading Ouput file path...");
 		//TODO Need to implement validation 
 		return OutputfilePath;

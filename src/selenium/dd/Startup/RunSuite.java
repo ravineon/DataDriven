@@ -10,12 +10,13 @@ import selenium.dd.Configuration.Configuration_Interface;
 import selenium.dd.XLparser.ReadExcelTestCases;
 import selenium.dd.XLparser.ReadExcelTestScenarios;
 import selenium.dd.XLparser.FilterTestCases;
+import selenium.dd.XLparser.WriteXLExecutablTestCases;
 
 public class RunSuite {
 	
 	//Logging details in log.property file
 	static Logger log = Logger.getLogger(RunSuite.class.getName());
-	static final String LOG_PROPERTIES_FILE = "Conf/log.properties";
+	//static final String LOG_PROPERTIES_FILE = "Conf/log.properties";
 	
 	public static void main(String[] args) {
 		
@@ -42,7 +43,8 @@ public class RunSuite {
 		// Reading configuration file
 		log.info("Call to Read configuration file...");
 		Configuration_Interface conf = new Config();
-		String filePath = conf.getInputfilePath();
+		String InputfilePath = conf.getInputfilePath();
+		String OutputfilePath = conf.getoutputfilePath();
 		String TS_sheet_name=conf.getInputTSSheetName();
 		String TC_sheet_name=conf.getInputTCSheetName();
 		String release=conf.getRelease();
@@ -52,7 +54,7 @@ public class RunSuite {
 		ArrayList ReadTestScenarios = new ArrayList();
 		log.info("Call to Read XL file for scenarios...");
 		ReadExcelTestScenarios TS_ReadExcel = new ReadExcelTestScenarios();
-		ReadTestScenarios = TS_ReadExcel.readFullXL(filePath, TS_sheet_name, release);
+		ReadTestScenarios = TS_ReadExcel.readFullXL(InputfilePath, TS_sheet_name, release);
 		log.info("Call Read XL file for scenarios complete...");
 		//Debug: System.out.println(ReadTestScenarios);
 		
@@ -67,15 +69,17 @@ public class RunSuite {
 		ArrayList ReadTestCases = new ArrayList();
 		log.info("Call to Read XL file for Test cases...");
 		ReadExcelTestCases TS_ReadExcelTC = new ReadExcelTestCases();
-		ReadTestCases = TS_ReadExcelTC.readFullXL(filePath, TC_sheet_name, FilterTestScenarios);
+		ReadTestCases = TS_ReadExcelTC.readFullXL(InputfilePath, TC_sheet_name, FilterTestScenarios);
 		log.info("Call Reading XL file for Test cases complete...");
 		
-
+		//Create Output XL file for executable test cases and scenarios
+		log.info("Call to Write XL file for creating output file...");
+		WriteXLExecutablTestCases ExecutableTC = new WriteXLExecutablTestCases();
+		ExecutableTC.ExecutableTestCases(ReadTestCases, OutputfilePath);
+		log.info("Call to Write XL file for creating output file Complete ...");
 		
-		/*String[] Scenarios= new String[10];
-		log.info("Call to write output XL file...");
-		FilterScenarios FilterSce= new FilterScenarios();
-		FilterSce.FilterSce(ReadTestScenarios,release);*/
+		
+		
 	}
 
 }

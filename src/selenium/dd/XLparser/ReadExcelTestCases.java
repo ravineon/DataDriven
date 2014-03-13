@@ -2,12 +2,14 @@ package selenium.dd.XLparser;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -61,7 +63,15 @@ public class ReadExcelTestCases {
 				TestCases.add(new ArrayList());				
 				//Iterate Columns
 				for(int j=0; j<cols; j++) {
+					
+						//Get Current Row
 						Row current_row = sh.getRow(i);
+						
+						//To get date from excel file
+						Cell cell = current_row.getCell(j);
+						SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+					
+						
 						//Debug: System.out.println("row and col value =" + i + " , " + j);
 						Cell blank_cell = current_row.getCell(j, current_row.CREATE_NULL_AS_BLANK);
 						//Debug: System.out.println("Blank cell = " + blank_cell);
@@ -77,9 +87,14 @@ public class ReadExcelTestCases {
 							((ArrayList)TestCases.get(i)).add(data);
 						}
 						if (type == 0 ) {
+							if((DateUtil.isCellDateFormatted(cell))){
+								String Dvalue = sdf.format(current_row.getCell(j).getDateCellValue());
+								((ArrayList)TestCases.get(i)).add(Dvalue);
+							} else {
 							double value = current_row.getCell(j).getNumericCellValue();
 							//Debug: System.out.println("Cell Value" + " " + value + "\n");
 							((ArrayList)TestCases.get(i)).add(value);
+							}
 						}
 						type=-1;
 	
@@ -98,14 +113,13 @@ public class ReadExcelTestCases {
 						data=((String)((ArrayList)TestCases.get(r)).get(c));
 						for (int i=0; i<scenarios.size();i++) {
 							if(data.equals(scenarios.get(i))) {
-								//System.out.println(((ArrayList)TestCases.get(r)).get(c) +"  "); 
-								System.out.println(scenarios.get(i)); 
+								//Debug: System.out.println(((ArrayList)TestCases.get(r)).get(c) +"  "); 
+								//Debug: System.out.println(scenarios.get(i)); 
 								String tcdata = (String) ((ArrayList)TestCases.get(r)).get(c+2);
 								if(tcdata.equals("Y")){
-									System.out.println("Copy " + ((ArrayList)TestCases.get(r)).get(c+1));
+									// Debug: System.out.println("Copy " + ((ArrayList)TestCases.get(r)).get(c+1));
 									RequiredTestCases.add(TestCases.get(r));
 									RequiredTestCases.add(new ArrayList());	
-											//(String) ((ArrayList)TestCases.get(r)));
 								}
 							} else {	
 								
@@ -123,18 +137,18 @@ public class ReadExcelTestCases {
 				log.debug("Error in ReadExcel.java while reading XL file", e);
 			}
 			
-			 //Debug:
-		 System.out.println(" In Loop");
+			 //Debug: 
+			/*System.out.println(" In Loop");
 				for(int r=0; r<RequiredTestCases.size(); r++){
 						String newLine = System.getProperty("line.separator");
 						System.out.println(newLine);
 						for(int c=0; c <((ArrayList)RequiredTestCases.get(r)).size(); c++) {
 							System.out.print(((ArrayList)RequiredTestCases.get(r)).get(c) +"  ");  
 						}
-				} 
+				} */  
 			
 				log.info("Reading XL Complete for Test Case...");			
-				return TestCases;
+				return RequiredTestCases;
 	}
 	
 	

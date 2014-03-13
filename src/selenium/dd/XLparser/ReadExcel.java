@@ -22,27 +22,27 @@ import org.apache.poi.ss.usermodel.Workbook;
  *
  */
 
-public class ReadExcelTestScenarios {
+public class ReadExcel {
 	
 	//Global Variables
 	ArrayList TestScenarios = new ArrayList();
 	ArrayList RequiredScenarios = new ArrayList();
 	
 	//Logging details in log.property file
-	static Logger log = Logger.getLogger(ReadExcelTestScenarios.class.getName());
-	//static final String LOG_PROPERTIES_FILE = "Conf/log.properties";
+	static Logger log = Logger.getLogger(ReadExcel.class.getName());
+	static final String LOG_PROPERTIES_FILE = "Conf/log.properties";
 	
 	/**
 	 * This function will be used to Read complete XL file and return values in Array List.
-	 * This function requires three parameters: Path of XL file, XL Sheet name and Release number.
+	 * This function requires one parameter and that is the path of the XL file to read.
 	 * @return 
 	 */
 	public ArrayList readFullXL(String filePath, String sheet_name, String release_num) {
 		
 		//Logging details
 		PropertyConfigurator.configure("Configuration/log.properties");
-		log.info("Reading XL file for all Test Scenarios...");
-		
+		log.info("Reading XL file...");
+		System.out.println("Release no." + release_num);
 		int Rcol=0;
 		
 		//Start Reading XL file
@@ -51,9 +51,9 @@ public class ReadExcelTestScenarios {
 			Workbook WB = new HSSFWorkbook(FSRead);
 			Sheet sh = WB.getSheet(sheet_name);
 			int rows = sh.getPhysicalNumberOfRows();
-			//Debug: System.out.println("No. of rows in Input XL file for Test Scenarios Sheet = " + rows);
+			System.out.println("No. of rows in Input XL file for Test Scenarios Sheet = " + rows);
 			int cols = sh.getRow(0).getLastCellNum();
-			//Debug: System.out.println("No. of columns in input file for Test Scenarios Sheet = " + cols);
+			System.out.println("No. of columns in input file for Test Scenarios Sheet = " + cols);
 			// Debug: System.out.println("Release Number = " + releasenum);
 			
 			//Iterate Rows and Read complete input XL file
@@ -91,7 +91,7 @@ public class ReadExcelTestScenarios {
 			
 			
 	
-			//Filter Release column and Read only required input XL file
+			//Filter Release column and Read only required inout XL file
 			int ReleaseCol = Rcol;
 			log.info("Reading XL for required release column and Test Scenarios...");
 			int j=-1; //Set loop counter for new ArrayList getting copied in...
@@ -128,7 +128,7 @@ public class ReadExcelTestScenarios {
 						}
 				} 
 			*/
-				log.info("Reading XL Complete for Test Scenarios and required column...");
+				log.info("Excel Read Complete...");
 				return RequiredScenarios;
 	}
 	
