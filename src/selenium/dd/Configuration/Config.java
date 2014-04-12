@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.openqa.selenium.WebDriver;
 
 public class Config implements Configuration_Interface {
 
@@ -105,9 +106,9 @@ public class Config implements Configuration_Interface {
 	}
 	
 	public String DriverToUse() {
-		String DriverToUse = conf_file.getProperty("Driver");
+		String ConfDriver = conf_file.getProperty("Browser");
 		//TODO Need to implement validation 
-		return DriverToUse;
+		return ConfDriver;
 	}
 	
 }

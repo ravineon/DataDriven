@@ -25,23 +25,29 @@ public class SeleniumDriver {
 	
 	//Logging details in log.property file
 	static Logger log = Logger.getLogger(Config.class.getName());
-	static final String LOG_PROPERTIES_FILE = "Conf/log.properties";
+	//static final String LOG_PROPERTIES_FILE = "Conf/log.properties";
 	
-	public SeleniumDriver() {
+	/* public SeleniumDriver() {
 		PropertyConfigurator.configure("Conf/log.properties");
-		log.info("Picked Driver to use.");
-	}
+	} */
 	
-	public WebDriver getDriver() {
+	public WebDriver getDriver(String ConfDriver) {
+		//Logging details
+		PropertyConfigurator.configure("Configuration/log.properties");
+		log.info("Pick Driver to use.");
+		
 		Config readDriver = new Config();
-		String Driver = readDriver.DriverToUse();
+		//String Driver = readDriver.DriverToUse();
 		WebDriver driverToUse = null;
-			if(Driver.equals("chrome")) {
+			if(ConfDriver.equals("chrome")) {
 				driverToUse = new ChromeDriver();
-				//TODO need to place in suite package and make path working for everyone
-				System.setProperty("webdriver.chrome.driver", "/Users/ashv/Automation/Selenium/AshDataDriven/BrowserNativeDriver/chromedriver");
+				//TODO need to place OS Validation as well
+				//MAC
+				System.setProperty("webdriver.chrome.driver", "/Users/ashv/Automation/Selenium/DataDriven/BrowserNativeDriver/chromedriver");
+				//WIN
+				//System.setProperty("webdriver.chrome.driver", "/Users/ashv/Automation/Selenium/DataDriven/BrowserNativeDriver/chromedriver");
 			}
-			else if(Driver.equals("firefox")) {
+			else if(ConfDriver.equals("firefox")) {
 				driverToUse = new FirefoxDriver();
 			}
 			//TODO implement validation on Driver name

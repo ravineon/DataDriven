@@ -1,5 +1,7 @@
 package selenium.dd.Configuration;
 
+
+
 public interface Configuration_Interface {
 	java.lang.String getRelease();
 	java.lang.String getInputfilePath();

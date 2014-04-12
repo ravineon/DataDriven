@@ -48,6 +48,7 @@ public class RunSuite {
 		String TS_sheet_name=conf.getInputTSSheetName();
 		String TC_sheet_name=conf.getInputTCSheetName();
 		String release=conf.getRelease();
+		String driver=conf.DriverToUse();
 		log.info("Call Read configuration file complete...");
 		
 		//Read Excel File for test scenarios and filter required release column and scenarios
@@ -78,8 +79,12 @@ public class RunSuite {
 		ExecutableTC.ExecutableTestCases(ReadTestCases, OutputfilePath);
 		log.info("Call to Write XL file for creating output file Complete ...");
 		
-		
-		
+		//Start Execute Test Case
+		//Pass Driver to run through this.
+		log.info("Start Executing Test Cases...");
+		//ExecuteTestCase ETC=new ExecuteTestCase();
+
+		log.info("Completed Start Executing Test Cases...");
 	}
 
 }

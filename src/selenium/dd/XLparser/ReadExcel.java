@@ -91,7 +91,7 @@ public class ReadExcel {
 			
 			
 	
-			//Filter Release column and Read only required inout XL file
+			//Filter Release column and Read only required input XL file
 			int ReleaseCol = Rcol;
 			log.info("Reading XL for required release column and Test Scenarios...");
 			int j=-1; //Set loop counter for new ArrayList getting copied in...
