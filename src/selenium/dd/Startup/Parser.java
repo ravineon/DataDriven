@@ -12,10 +12,10 @@ import selenium.dd.XLparser.ReadExcelTestScenarios;
 import selenium.dd.XLparser.FilterTestCases;
 import selenium.dd.XLparser.WriteXLExecutablTestCases;
 
-public class RunSuite {
+public class Parser {
 	
-	//Logging details in log.property file
-	static Logger log = Logger.getLogger(RunSuite.class.getName());
+	//Logging details in log.property file 
+	static Logger log = Logger.getLogger(Parser.class.getName());
 	//static final String LOG_PROPERTIES_FILE = "Conf/log.properties";
 	
 	public static void main(String[] args) {
@@ -83,7 +83,7 @@ public class RunSuite {
 		//Pass Driver to run through this.
 		log.info("Start Executing Test Cases...");
 		//ExecuteTestCase ETC=new ExecuteTestCase();
-
+		
 		log.info("Completed Start Executing Test Cases...");
 	}
 

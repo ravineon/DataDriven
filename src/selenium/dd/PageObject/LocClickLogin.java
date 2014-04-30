@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class ClickLogin {
+public class LocClickLogin {
 
 	public WebElement SignInPage(WebDriver driver, String location) {
 		WebElement Locator=null;

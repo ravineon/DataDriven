@@ -1,5 +1,5 @@
 package selenium.dd.PageObject;
 
-public class TypeSearch {
+public class LocTypeSearch {
 
 }
