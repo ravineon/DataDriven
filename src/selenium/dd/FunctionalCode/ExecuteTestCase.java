@@ -47,7 +47,7 @@ public class ExecuteTestCase {
 	//Private: Only one constructor through class will initiated  
 	private static WebDriver driver = new FirefoxDriver();
 
-	/*
+	/* Temp Debug
 	public static void main(String[] args) {
 		ReadTestCase();
 	}*/
@@ -55,7 +55,7 @@ public class ExecuteTestCase {
 	// Call Parser so that got output file
 
 	// This will dynamic from parser class
-	static String OutputfilePath = "F:\\Automation\\Selenuim\\DataDriven\\Output\\Output_2.xls";
+	static String OutputfilePath = "F:\\Automation\\Selenuim\\DataDriven\\Output\\Output.xls";
 	// This will be constant value
 	static String sheet_name = "Executable TestCases";
 
@@ -93,8 +93,7 @@ public class ExecuteTestCase {
 				// Iterate Columns
 				innerLoop: for (int j = 0; j < cols; j++) {
 					Row current_row = sh.getRow(i);
-					// Debug: System.out.println("row and col value =" + i +
-					// " , " + j);
+					// Debug: System.out.println("row and col value =" + i + " , " + j);
 					Cell blank_cell = current_row.getCell(j,current_row.CREATE_NULL_AS_BLANK);
 					// Debug: System.out.println("Blank cell = " + blank_cell);
 					int type = current_row.getCell(j).getCellType();
@@ -107,47 +106,51 @@ public class ExecuteTestCase {
 
 					if (type == 3) {
 						// System.out.println("Empty Cell");
-						((ArrayList) TestScenarios.get(ExecuteTCCounter)).add("Blank");
+						((ArrayList) TestScenarios.get(ExecuteTCCounter)).add("");
 					}
 					if (type == 1) {
-						String data = current_row.getCell(j)
-								.getStringCellValue();
+						String data = current_row.getCell(j).getStringCellValue();
 						// System.out.println("Cell Value" + " " + data + "\n");
 						((ArrayList) TestScenarios.get(ExecuteTCCounter)).add(data);
 					}
 					if (type == 0) {
-						double value = current_row.getCell(j)
-								.getNumericCellValue();
-						// System.out.println("Cell Value" + " " + value +
-						// "\n");
+						double value = current_row.getCell(j).getNumericCellValue();
+						// System.out.println("Cell Value" + " " + value + "\n");
 						((ArrayList) TestScenarios.get(ExecuteTCCounter)).add(value);
 					}
 					type = -1;
 				}
-			}
+			}   FSRead.close();
 		} catch (IOException e) {
 			log.debug("Error in ReadExcel.java while reading XL file", e);
 		}
 
-		// Reading Complete Output XL file for Test Case
-
+		// Reading Complete Array (Stored output XL file) to execute Test Case
 		log.info("Start Reading Test Cases to Execute...");
 
-		// This will dynamic from parser class
-		// WebDriver driver = new FirefoxDriver();
+		//Debug:
+		//System.out.println("Test Scenario Size" + TestScenarios.size());
+		//System.out.println("Test Scenario row size" + ((ArrayList) TestScenarios.get(0)).size());
 
-		// System.out.println(TestScenarios.size());
+		
 		// for(int i=0; i<TestScenarios.size();i++) {
 		for (int i = 0; i < 1; i++) {
 			String newLine = System.getProperty("line.separator");
 			System.out.println(newLine);
 
 			log.info("Executing Test Case No." + i);
+			next:
 			for (int c = 0; c < ((ArrayList) TestScenarios.get(i)).size(); c++) {
 
 				if (c == 0 || c == 1) {
 					log.info("Executing " + (String) ((ArrayList) TestScenarios.get(i)).get(c));
 				}
+				if( ((String)((ArrayList) TestScenarios.get(i)).get(c)).equals("")) {
+					//System.out.println("Bank");
+					//Need to do some validation later: Check if user error and cell value is empty. (i.e. check next cell value).
+					break next;
+				}
+				
 				if (c > 2) {
 					String MethodName = (String) ((ArrayList) TestScenarios.get(i)).get(c);
 					//System.out.println("Ash " + MethodName);
@@ -155,8 +158,17 @@ public class ExecuteTestCase {
 					
 					//Get input if type defined in XL column
 					if(MethodName.contains("Type")) {
+						//Increment to get the next cell value and set flag
 						c++; flag=true;
+						
+						//Checking if last column have type. This is validation for a defect cause user error in XL sheet
+						if(c==((ArrayList) TestScenarios.get(i)).size()) {
+							driver.quit();
+							log.info("Test Case Execution finished, checking for next test case");
+							break next;
+						}
 					}
+					
 
 					try {
 						Class cls = Class.forName(className);
@@ -166,12 +178,14 @@ public class ExecuteTestCase {
 						Class[] paramTypes = new Class[1];
 						paramTypes[0]=String.class;
 						
-						//If type defined in XL column
+						//If type was defined in XL column get the next 'Input' value from XL
+						//And invoke method that required parameters. + Reset flag to flase.
 						if(flag) {
+						flag=false;
 						String Input = (String) ((ArrayList) TestScenarios.get(i)).get(c);
 						Method method = cls.getMethod(MethodName, paramTypes);
 						method.invoke(obj,Input);
-						}
+						} // else invoke simple reflection method (i.e. without parameter). 
 						else {
 						Method method = cls.getMethod(MethodName);
 						method.invoke(obj);
@@ -201,20 +215,23 @@ public class ExecuteTestCase {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-
-					// CallFunction();
-					// System.out.print(
-					// (String)((ArrayList)TestScenarios.get(i)).get(c) +"  ");
 				}
 
-				if (c == ((ArrayList) TestScenarios.get(i)).size()) {
+				//Checking for last column of row, so that we can close driver and close browser.
+				//We will re initiate driver and re-open browser for next test case
+				if (c == ((ArrayList) TestScenarios.get(i)).size()-1) {
+					log.info("Closing Driver for " + i  + " Test Case");
 					driver.quit();
 				}
-				// System.out.println(TestScenarios.get(i));
-			}
-		}
+			
+			} 	// Close inner For loop
+		} // Close outer For loop
 	}
 
+	
+	//All Locator functions are defined here
+	//Function names are defined in Excel file as keyword.
+	// **************************** // ********************************* // 
 	public void HomePageUrl() {
 		LocHomePageUrl HPUrl = new LocHomePageUrl(driver);
 	}
@@ -235,6 +252,18 @@ public class ExecuteTestCase {
 		LocClickLogin Id = new LocClickLogin();
 		WebElement LocId = Id.SignInPage(driver, "UserId");
 		LocId.sendKeys(type);
+	}
+	
+	public void TypePass(String type) {
+		LocClickLogin pass = new LocClickLogin();
+		WebElement Locpass = pass.SignInPage(driver, "Password");
+		Locpass.sendKeys(type);
+	}
+	
+	public void submit() {
+		LocClickLogin sub = new LocClickLogin();
+		WebElement Locsub = sub.SignInPage(driver, "SubmitButton");
+		Locsub.submit();
 	}
 
 }

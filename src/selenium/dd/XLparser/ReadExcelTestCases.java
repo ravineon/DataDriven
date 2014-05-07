@@ -79,7 +79,7 @@ public class ReadExcelTestCases {
 						//Debug: System.out.println("Value of Type = " + type);
 						if(type == 3){
 							//System.out.println("Empty Cell");
-							((ArrayList)TestCases.get(i)).add("Blank");
+							((ArrayList)TestCases.get(i)).add("");
 						}
 						if (type == 1) {
 							String data = current_row.getCell(j).getStringCellValue();
